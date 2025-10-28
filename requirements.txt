@@ -1,0 +1,11 @@
+speechrecognition
+pyttsx3
+google-generativeai
+pyautogui
+pillow
+opencv-python
+numpy
+pandas
+scikit-learn
+tensorflow
+pygame
