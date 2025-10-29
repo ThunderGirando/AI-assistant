@@ -1,6 +1,8 @@
-# STARK - AI Assistant
+# Stark - AI Assistant
 
-Uma IA assistente de voz que executa tarefas no PC, aprende com o usuário e joga jogos. Desenvolvida em Python com ML/DL.
+![Stark IA](src/img/Stark%20IA.jpg)
+
+Uma IA assistente de voz que executa tarefas no PC, aprende com o usuário e se aprimora sozinha. Desenvolvida em Python com ML/DL.
 
 ## Funcionalidades
 
