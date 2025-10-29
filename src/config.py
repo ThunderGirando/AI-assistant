@@ -1,10 +1,10 @@
-# Configurações da IA Frieren
+# Configurações da IA STARK
 
 # Configurações de voz
 VOICE_LANGUAGE = 'pt-BR'
 VOICE_RATE = 200
 VOICE_VOLUME = 1.0
-WAKE_WORD = 'friren'
+WAKE_WORD = 'STARK'
 
 # Configurações de IA
 GEMINI_API_KEY = 'AIzaSyDDL3nrf5qYsIpdpNmTwFkvrRfqXpoOwIU'

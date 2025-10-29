@@ -1,13 +1,15 @@
-# Frieren AI Assistant
+# STARK - AI Assistant
 
-Uma IA assistente inspirada em Frieren, a maga elfa de Sousou no Frieren. Ela responde ao comando de voz "Frieren", pode abrir aplicativos no PC e monitorar a tela em tempo real.
+Uma IA assistente de voz que executa tarefas no PC, aprende com o usuário e joga jogos. Desenvolvida em Python com ML/DL.
 
 ## Funcionalidades
 
-- **Wake Word Detection**: Ativa ao ouvir "Frieren"
-- **Reconhecimento de Voz**: Processa comandos em português
+- **Wake Word Detection**: Ativa ao ouvir "STARK"
+- **Reconhecimento de Voz**: Processa comandos em português brasileiro
 - **Síntese de Voz**: Responde com voz feminina
-- **Abertura de Aplicativos**: Abre Chrome, Notepad, Calculadora, etc.
+- **Abertura de Aplicativos**: Abre Chrome, Notepad, Calculadora, Minecraft, etc.
+- **Jogos**: Jogo da velha com IA que aprende
+- **Aprendizado de Máquina**: Classifica intenções e aprende com interações
 - **Monitoramento de Tela**: Vê a tela em tempo real (baseado em screenshots)
 - **Integração com Gemini**: Aprende com comandos desconhecidos usando IA generativa
 
@@ -18,7 +20,7 @@ Uma IA assistente inspirada em Frieren, a maga elfa de Sousou no Frieren. Ela re
    pip install -r requirements.txt
    ```
 
-2. Configure a chave da API do Gemini em `src/config.py`
+2. Configure a chave da API do Gemini em `src/config.py` (opcional)
 
 3. Execute:
    ```
@@ -27,25 +29,42 @@ Uma IA assistente inspirada em Frieren, a maga elfa de Sousou no Frieren. Ela re
 
 ## Como Usar
 
-1. Diga "Frieren" para ativar
+1. Diga "STARK" para ativar
 2. Dê comandos como:
-   - "Abrir Chrome"
-   - "Abrir Calculadora"
-   - "O que você vê?"
-   - "Sair"
+   - "STARK abra o chrome"
+   - "STARK vamos jogar jogo da velha"
+   - "STARK o que você vê?"
+   - "STARK sair"
 
 ## Estrutura do Projeto
 
 - `src/`: Código fonte
   - `main.py`: Loop principal
   - `voice.py`: Reconhecimento e síntese de voz
+  - `learning.py`: Módulo de aprendizado de máquina
   - `vision.py`: Monitoramento de tela
   - `ai_api.py`: Integração com Gemini
   - `config.py`: Configurações
   - `utils.py`: Funções utilitárias
-- `models/`: Modelos de ML (futuro)
-- `data/`: Dados de treinamento (futuro)
+- `games/`: Módulos de jogos
+  - `game_module.py`: Jogos disponíveis
+- `models/`: Modelos treinados de ML
+- `data/`: Dados de treinamento
 - `requirements.txt`: Dependências
+- `test_microphone.py`: Script de teste do microfone
+
+## Desenvolvimento
+
+- Linguagem: Python 3.x
+- Frameworks: speech_recognition, pyttsx3, scikit-learn, tensorflow, pygame
+- Plataforma: Windows (compatível com Linux/Mac)
+
+## Próximos Passos
+
+- Melhorar reconhecimento offline
+- Adicionar mais jogos
+- Integrar com APIs externas
+- Aprimorar aprendizado com reinforcement learning
 
 ## Licença
 
