@@ -1,7 +1,7 @@
-# TODO - Frieren AI Assistant
+# TODO - Stark AI Assistant
 
 ## Fase 1: Base Funcional (Atual)
-- [x] Wake word "Frieren"
+- [x] Wake word "Stark"
 - [x] Reconhecimento de voz básico
 - [x] Síntese de voz feminina
 - [x] Abertura de aplicativos simples (Chrome, Notepad, Calculadora)
