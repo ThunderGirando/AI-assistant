@@ -87,8 +87,8 @@ class VoiceAssistant:
             text = self.listen_wake_word()
             if text:
                 text_lower = text.lower()
-                # Verifica se começa com wake word (com tolerância de 70% para mais flexibilidade)
-                if text_lower.startswith(self.wake_word[:3]) and difflib.SequenceMatcher(None, text_lower[:len(self.wake_word)], self.wake_word).ratio() > 0.7:
+                # Verifica se começa com wake word (com tolerância de 65% para mais flexibilidade)
+                if text_lower.startswith(self.wake_word[:3]) and difflib.SequenceMatcher(None, text_lower[:len(self.wake_word)], self.wake_word).ratio() > 0.65:
                     log_message(f"Wake word detectado: {text}")
                     # Extrai comando após wake word
                     command = text_lower[len(self.wake_word):].strip()
