@@ -66,8 +66,3 @@ Uma IA assistente de voz que executa tarefas no PC, aprende com o usuário e se 
 - Melhorar reconhecimento offline
 - Adicionar mais jogos
 - Integrar com APIs externas
-- Aprimorar aprendizado com reinforcement learning
-
-## Licença
-
-MIT License - veja LICENSE para detalhes.

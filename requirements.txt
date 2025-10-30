@@ -1,4 +1,4 @@
-speech_recognition
+speechrecognition
 pyttsx3
 scikit-learn
 tensorflow
@@ -7,3 +7,10 @@ pyautogui
 numpy
 pandas
 PyAudio
+google-generativeai
+opencv-python
+Pillow
+mss
+screeninfo
+dxcam
+pytesseract

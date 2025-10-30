@@ -1,132 +1,56 @@
 import threading
 import time
+import sys
+import os
+
+# Adicionar o diretório raiz ao path para encontrar commands/
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, root_dir)
+
 from voice import VoiceAssistant
 from vision import VisionModule
 from ai_api import AIAPI
 from voice_recognition import VoiceRecognition
-from utils import log_message, open_application
+from learning_mode import LearningMode
+from utils import setup_logging, log_message
 from config import WAKE_WORD
-import os
+from commands import open_apps, manage_apps, vision_commands, learning_commands
 
-def handle_command(command, voice, vision, ai, voice_recog=None):
+# Configurar logging com rotação
+setup_logging()
+
+def handle_command(command, voice, vision, ai, voice_recog=None, learning_mode=None):
     """Processa um comando."""
     log_message(f"Processando comando: {command}")
     context = vision.get_screen_context()
 
-    if 'abrir' in command:
-        if 'chrome' in command or 'navegador' in command:
-            try:
-                open_application('chrome.exe')
-                voice.speak("Abrindo Chrome.")
-            except Exception as e:
-                log_message(f"Erro ao abrir Chrome: {e}", 'error')
-                voice.speak("Não sei onde está o Chrome. Qual é o caminho completo?")
-                path = voice.listen()
-                if path:
-                    open_application(path)
-                    voice.speak("Tentando abrir.")
-        elif 'notepad' in command or 'bloco de notas' in command:
-            try:
-                open_application('notepad.exe')
-                voice.speak("Abrindo Bloco de Notas.")
-            except Exception as e:
-                log_message(f"Erro ao abrir Notepad: {e}", 'error')
-                voice.speak("Não sei onde está o Notepad. Qual é o caminho completo?")
-                path = voice.listen()
-                if path:
-                    open_application(path)
-                    voice.speak("Tentando abrir.")
-        elif 'calculadora' in command:
-            try:
-                open_application('calc.exe')
-                voice.speak("Abrindo Calculadora.")
-            except Exception as e:
-                log_message(f"Erro ao abrir Calculadora: {e}", 'error')
-                voice.speak("Não sei onde está a Calculadora. Qual é o caminho completo?")
-                path = voice.listen()
-                if path:
-                    open_application(path)
-                    voice.speak("Tentando abrir.")
-        elif 'minecraft' in command or 'mine' in command:
-            try:
-                if open_application('minecraft'):
-                    voice.speak("Abrindo Minecraft.")
-                else:
-                    voice.speak("Não encontrei o Minecraft. Qual é o caminho completo?")
-                    path = voice.listen()
-                    if path:
-                        try:
-                            os.startfile(path)
-                            voice.speak("Tentando abrir.")
-                        except Exception as e2:
-                            log_message(f"Erro ao abrir caminho alternativo: {e2}", 'error')
-                            voice.speak("Não consegui abrir.")
-            except Exception as e:
-                log_message(f"Erro ao abrir Minecraft: {e}", 'error')
-                voice.speak("Não encontrei o Minecraft. Qual é o caminho completo?")
-                path = voice.listen()
-                if path:
-                    try:
-                        os.startfile(path)
-                        voice.speak("Tentando abrir.")
-                    except Exception as e2:
-                        log_message(f"Erro ao abrir caminho alternativo: {e2}", 'error')
-                        voice.speak("Não consegui abrir.")
-        else:
-            # Extrair nome do app do comando (ex: "abrir opera" -> "opera")
-            app_name = command.replace('abrir', '').strip()
-            if app_name:
-                try:
-                    if open_application(app_name):
-                        voice.speak(f"Abrindo {app_name}.")
-                    else:
-                        voice.speak(f"Não encontrei {app_name}. Qual é o caminho completo?")
-                        path = voice.listen()
-                        if path:
-                            try:
-                                os.startfile(path)
-                                voice.speak("Tentando abrir.")
-                            except Exception as e2:
-                                log_message(f"Erro ao abrir {path}: {e2}", 'error')
-                                voice.speak("Não consegui abrir.")
-                except Exception as e:
-                    log_message(f"Erro ao abrir {app_name}: {e}", 'error')
-                    voice.speak(f"Não sei onde está {app_name}. Qual é o caminho completo?")
-                    path = voice.listen()
-                    if path:
-                        try:
-                            os.startfile(path)
-                            voice.speak("Tentando abrir.")
-                        except Exception as e2:
-                            log_message(f"Erro ao abrir {path}: {e2}", 'error')
-                            voice.speak("Não consegui abrir.")
-            else:
-                voice.speak("Qual aplicativo você quer abrir?")
-                app = voice.listen()
-                if app:
-                    try:
-                        if open_application(app):
-                            voice.speak(f"Abrindo {app}.")
-                        else:
-                            voice.speak(f"Não encontrei {app}.")
-                    except Exception as e:
-                        log_message(f"Erro ao abrir {app}: {e}", 'error')
-                        voice.speak(f"Não sei onde está {app}.")
-    elif 'adicionar' in command and 'aplicativo' in command:
-        voice.speak("Digite o nome do aplicativo no terminal e pressione Enter.")
-        app_name = input("Nome do aplicativo: ").strip()
-        if app_name:
-            voice.speak("Agora digite o caminho completo do executável e pressione Enter.")
-            app_path = input("Caminho do aplicativo: ").strip()
-            if app_path:
-                from utils import add_application
-                add_application(app_name, app_path)
-                voice.speak(f"Aplicativo {app_name} adicionado com sucesso!")
-            else:
-                voice.speak("Caminho vazio. Tente novamente.")
-        else:
-            voice.speak("Nome vazio. Tente novamente.")
-    elif 'gravar voz' in command or 'treinar voz' in command:
+    # Verificar se é resposta de aprendizado
+    if learning_mode and learning_mode.questions_queue:
+        unanswered = [q for q in learning_mode.questions_queue if not q['answered']]
+        if unanswered:
+            # Processar como resposta de aprendizado
+            if learning_mode.process_learning_response(command):
+                voice.speak("Obrigado pela resposta! Continuando a aprender...")
+                return True
+
+    # Tentar comandos organizados por módulos
+    if open_apps.handle_open_command(command, voice):
+        return True
+
+    if manage_apps.handle_add_app_command(command, voice):
+        return True
+
+    if manage_apps.handle_list_apps_command(command, voice):
+        return True
+
+    if vision_commands.handle_vision_command(command, voice, vision, learning_mode, LearningMode, ai):
+        return True
+
+    if learning_commands.handle_learning_command(command, voice, vision, ai, learning_mode, LearningMode):
+        return True
+
+    # Comandos básicos que ficam na main
+    if 'gravar voz' in command or 'treinar voz' in command:
         voice.speak("Vou gravar algumas amostras da sua voz para reconhecimento. Diga 'pronto' quando estiver pronto.")
         ready = voice.listen()
         if ready and 'pronto' in ready:
@@ -141,20 +65,12 @@ def handle_command(command, voice, vision, ai, voice_recog=None):
                 voice.speak("Modelo treinado com sucesso! Agora reconheço sua voz.")
             else:
                 voice.speak("Não foi possível treinar o modelo. Tente novamente com mais amostras.")
-    elif 'listar' in command and 'aplicativos' in command:
-        from utils import load_apps
-        apps = load_apps()
-        if apps:
-            app_list = ", ".join(apps.keys())
-            print(f"Aplicativos cadastrados: {app_list}")
-            voice.speak(f"Você tem {len(apps)} aplicativos cadastrados. Veja a lista no terminal.")
-        else:
-            voice.speak("Nenhum aplicativo cadastrado ainda.")
-    elif 'ver tela' in command or 'o que você vê' in command:
-        voice.speak(f"Estou vendo: {context}")
+        return True
+
     elif 'sair' in command or 'parar' in command:
         voice.speak("Até logo!")
         return False
+
     else:
         # Usar IA para comandos desconhecidos
         response = ai.learn_from_unknown(command, context)
@@ -167,6 +83,7 @@ def main():
     vision = VisionModule()
     ai = AIAPI()
     voice_recog = VoiceRecognition()
+    learning_mode = None  # Inicializar como None
 
     log_message("Sistema STARK iniciado. Diga 'STARK' para me chamar.")
     voice.speak("Sistema STARK iniciado. Diga 'STARK' para me chamar.")
@@ -179,9 +96,28 @@ def main():
     monitor_thread.start()
 
     while True:
+        # Verificar se há perguntas de aprendizado pendentes
+        if learning_mode and learning_mode.questions_queue:
+            unanswered = [q for q in learning_mode.questions_queue if not q['answered']]
+            if unanswered:
+                # Modo de resposta de aprendizado - ouvir continuamente sem wake word
+                log_message("Aguardando resposta de aprendizado...")
+                voice.speak("Estou ouvindo sua resposta...")
+                response = voice.listen(timeout=10)  # Timeout de 10 segundos para resposta
+                if response:
+                    log_message(f"Resposta de aprendizado recebida: {response}")
+                    if learning_mode.process_learning_response(response):
+                        voice.speak("Obrigado pela resposta! Continuando a aprender...")
+                    else:
+                        voice.speak("Não entendi sua resposta. Tente novamente.")
+                else:
+                    voice.speak("Não ouvi resposta. Continuando observação...")
+                continue  # Voltar para verificar se ainda há perguntas pendentes
+
+        # Modo normal - aguardar wake word
         command = voice.listen_for_wake_word()
         if command:
-            if not handle_command(command, voice, vision, ai, voice_recog):
+            if not handle_command(command, voice, vision, ai, voice_recog, learning_mode):
                 break
 
 if __name__ == "__main__":
