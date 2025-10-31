@@ -1,4 +1,5 @@
-# Configurações da IA Assistente
+
+# Configurações da IA Assistente Stark
 
 # Configurações de voz
 VOICE_LANGUAGE = 'pt-BR'  # Idioma para reconhecimento e síntese de voz
@@ -18,6 +19,33 @@ SCREEN_CAPTURE_INTERVAL = 1/60  # Intervalo de captura de tela (60 FPS)
 
 # Configurações de API
 GEMINI_API_KEY = 'AIzaSyDDL3nrf5qYsIpdpNmTwFkvrRfqXpoOwIU'  # Substitua pela sua chave da API Gemini
+
+# Configurações de IA - Priorizando modelos gratuitos e rápidos
+GEMINI_MODEL = 'models/gemini-2.0-flash'  # Modelo principal (mais rápido e gratuito)
+GEMINI_MODELS = [
+    'models/gemini-2.0-flash',      # Principal: rápido e gratuito
+    'models/gemini-1.5-flash',      # Backup: ainda gratuito e rápido
+    'models/gemini-1.5-pro'         # Último recurso: mais inteligente mas limitado
+]
+
+# Configurações Ollama (para futuro uso local)
+OLLAMA_API_URL = 'http://localhost:11434'  # URL padrão do Ollama
+OLLAMA_MODEL = 'mistral:7b'  # Modelo padrão (pode ser mudado para llama3.2:3b)
+OLLAMA_SYSTEM_PROMPT = """Você é Stark, um assistente de IA brasileiro amigável e útil.
+Suas especialidades são:
+1. Programação básica (Python, JavaScript, C#)
+2. Jogos e guias de jogos (sem boatos)
+3. Pesquisa geral e conhecimento factual
+
+Sempre responda em português brasileiro de forma direta, amigável e concisa.
+Seja prestativo e demonstre conhecimento nas suas áreas de especialidade."""
+
+# Estratégia de IA: 'ollama_first' (prioriza local) ou 'gemini_first' (prioriza nuvem)
+AI_STRATEGY = 'gemini_first'  # Começar com Gemini por ser mais rápido
+
+# Configurações de cache
+MAX_CACHE_VARIATIONS = 3  # Máximo de variações por prompt
+CACHE_VARIATION_CHANCE = 0.3  # Chance de gerar variação (30%)
 
 # Outras configurações
 LOG_FILE = 'Stark.log'  # Arquivo de log

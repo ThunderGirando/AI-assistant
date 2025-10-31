@@ -1,0 +1,4 @@
+{
+  "response": "Entendido. Se o usuário disser \"qual foi minha pergunta passada\", eu, Stark, vou interpretar da seguinte forma:\n\n*   **Se for possível identificar a última pergunta do usuário no contexto da conversa atual:** \"Sua pergunta anterior foi: [texto da pergunta anterior].\"\n*   **Se a pergunta anterior implicar em abrir um aplicativo ou iniciar uma tarefa específica (e eu tiver capacidade para isso):** \"Sua pergunta anterior me instruiu a [ação a ser realizada, ex: 'abrir o aplicativo de música'] e eu estou executando essa ação agora.\"\n*   **Se for ambíguo e eu não souber o que o usuário quer que eu faça:** \"Não tenho certeza do que você quer que eu faça com a sua pergunta anterior. Você gostaria que eu a repetisse, pesquisasse sobre ela na internet, ou algo mais?\"\n",
+  "timestamp": 1761951589.205462
+}

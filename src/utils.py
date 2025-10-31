@@ -170,6 +170,42 @@ def extract_app_name(command, command_word):
     except ValueError:
         return command.replace(command_word, '').strip()
 
+def extract_multiple_app_names(command, command_word):
+    """Extrai múltiplos nomes de aplicativos do comando."""
+    # Remove a palavra de comando
+    words = command.lower().split()
+    try:
+        idx = words.index(command_word.lower())
+        app_words = words[idx + 1:]  # Palavras após o comando
+    except ValueError:
+        app_words = command.lower().replace(command_word.lower(), '').split()
+
+    # Remove palavras de preenchimento
+    fillers = ['o', 'a', 'por', 'favor', 'ai', 'porfavor', 'me', 'e', 'também', 'bem', 'como']
+    app_words = [w for w in app_words if w not in fillers and w.strip()]
+
+    # Separar apps por conectores como "e", vírgulas, etc.
+    apps = []
+    current_app = []
+
+    for word in app_words:
+        if word in ['e', ','] or word.endswith(','):
+            # Finalizar app atual
+            if current_app:
+                apps.append(' '.join(current_app).strip())
+                current_app = []
+        else:
+            current_app.append(word)
+
+    # Adicionar último app
+    if current_app:
+        apps.append(' '.join(current_app).strip())
+
+    # Filtrar apps vazios
+    apps = [app for app in apps if app.strip()]
+
+    return apps if apps else None
+
 def save_data_to_file(data, filename):
     """Salva dados em um arquivo."""
     try:

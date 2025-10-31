@@ -14,3 +14,5 @@ mss
 screeninfo
 dxcam
 pytesseract
+requests
+tkinter

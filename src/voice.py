@@ -70,11 +70,11 @@ class VoiceAssistant:
         self.engine.runAndWait()
 
     def listen_wake_word(self):
-        """Escuta por wake word com timeout curto usando Google (mais rápido e preciso)."""
+        """Escuta por wake word com timeout adequado para conversas naturais."""
         try:
             mic = sr.Microphone()
             with mic as source:
-                audio = self.recognizer.listen(source, timeout=2, phrase_time_limit=3)  # Timeout maior, phrase menor para mais rapidez
+                audio = self.recognizer.listen(source, timeout=3, phrase_time_limit=20)  # 20 segundos para frases completas após wake word
                 # Usar Google diretamente (mais rápido que Vosk/Sphinx)
                 text = self.recognizer.recognize_google(audio, language=VOICE_LANGUAGE)
                 # Só logar quando detectar algo

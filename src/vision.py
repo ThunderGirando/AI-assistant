@@ -61,15 +61,15 @@ class VisionModule:
             cv2.imwrite('debug_original.png', frame)
 
             # Estratégia 1: OCR direto na imagem original (sem pré-processamento)
-            log_message("=== TESTANDO ESTRATÉGIAS DE OCR ===")
+            # log_message("=== TESTANDO ESTRATÉGIAS DE OCR ===")  # Removido para não poluir logs
             raw_text = pytesseract.image_to_string(frame, lang='por+eng')
-            log_message(f"OCR direto (sem processamento): '{raw_text[:100]}...'")
+            # log_message(f"OCR direto (sem processamento): '{raw_text[:100]}...'")  # Removido
 
             # Estratégia 2: Resize para 2x (pode melhorar reconhecimento)
             height, width = frame.shape[:2]
             resized = cv2.resize(frame, (width*2, height*2), interpolation=cv2.INTER_CUBIC)
             resized_text = pytesseract.image_to_string(resized, lang='por+eng')
-            log_message(f"OCR com resize 2x: '{resized_text[:100]}...'")
+            # log_message(f"OCR com resize 2x: '{resized_text[:100]}...'")  # Removido
 
             # Estratégia 3: Grayscale + CLAHE + threshold adaptativo
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -278,11 +278,9 @@ class VisionModule:
                         # Processar OCR a cada 60 frames (~1 FPS para análise pesada)
                         frame_count += 1
                         if frame_count % 60 == 0:
-                            log_message(f"Processando OCR no frame {frame_count}...")
                             text = self.extract_text_from_screen(frame)
                             if text:
                                 context += f" Texto detectado: {text[:100]}..."
-                                log_message(f"Texto encontrado: {text[:50]}...")
                         else:
                             context += " Monitoramento ativo."
                     else:
