@@ -1,5 +1,7 @@
 # Stark AI Assistant
 
+![Image](https://github.com/user-attachments/assets/ee0facb1-d380-4e8b-b1c9-2443763bbe22)
+
 Um assistente de IA inteligente que combina visão computacional, reconhecimento de voz e aprendizado de máquina para criar uma experiência interativa completa.
 
 ## Funcionalidades
